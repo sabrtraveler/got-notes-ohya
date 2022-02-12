@@ -121,29 +121,53 @@ const handleNoteSave = () => {
 // }
 
 // Delete the clicked note
-let handleNoteDelete = function (event) {
-  // prevents the click listener for the list from being called when the button inside of it is clicked
-  event.stopPropagation()
+const handleNoteDelete = (e) => {
+  // Prevents the click listener for the list from being called when the button inside of it is clicked
+  e.stopPropagation();
 
-  let note = $(this)
-    .parent('.list-group-item')
-    .data()
+  const note = e.target;
+  const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
 
-  if (activeNote.id === note.id) {
-    activeNote = {}
+  if (activeNote.id === noteId) {
+    activeNote = {};
   }
 
-  deleteNote(note.id).then(function () {
-    getAndRenderNotes()
-    renderActiveNote()
-  })
-}
+  deleteNote(noteId).then(() => {
+    getAndRenderNotes();
+    renderActiveNote();
+  });
+};
+
+// let handleNoteDelete = function (event) {
+//   // prevents the click listener for the list from being called when the button inside of it is clicked
+//   event.stopPropagation()
+
+//   let note = $(this)
+//     .parent('.list-group-item')
+//     .data()
+
+//   if (activeNote.id === note.id) {
+//     activeNote = {}
+//   }
+
+//   deleteNote(note.id).then(function () {
+//     getAndRenderNotes()
+//     renderActiveNote()
+//   })
+// }
 
 // Sets the activeNote and displays it
-let handleNoteView = function () {
-  activeNote = $(this).data()
-  renderActiveNote()
-}
+const handleNoteView = (e) => {
+  e.preventDefault();
+  activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+  renderActiveNote();
+};
+
+
+// let handleNoteView = function () {
+//   activeNote = $(this).data()
+//   renderActiveNote()
+// }
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
 let handleNewNoteView = function () {
