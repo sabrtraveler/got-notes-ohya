@@ -170,26 +170,48 @@ const handleNoteView = (e) => {
 // }
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
-let handleNewNoteView = function () {
-  activeNote = {}
-  renderActiveNote()
-}
+const handleNewNoteView = (e) => {
+  activeNote = {};
+  renderActiveNote();
+};
 
-// If a note's title or text are empty, hide the save button
-// Or else show it
-let handleRenderSaveBtn = function () {
-  if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
-    $saveNoteBtn.hide()
+// let handleNewNoteView = function () {
+//   activeNote = {}
+//   renderActiveNote()
+// }
+
+// hide the save button if note title or text is empty
+const handleRenderSaveBtn = () => {
+  if (!noteTitle.value.trim() || !noteText.value.trim()) {
+    hide(saveNoteBtn);
   } else {
-    $saveNoteBtn.show()
+    show(saveNoteBtn);
   }
-}
+};
+
+// let handleRenderSaveBtn = function () {
+//   if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
+//     $saveNoteBtn.hide()
+//   } else {
+//     $saveNoteBtn.show()
+//   }
+// }
 
 // Render's the list of note titles
-let renderNoteList = function (notes) {
-  $noteList.empty()
+const renderNoteList = async (notes) => {
+  let jsonNotes = await notes.json();
+  if (window.location.pathname === '/notes') {
+    noteList.forEach((el) => (el.innerHTML = ''));
+  }
 
-  let noteListItems = []
+  let noteListItems = [];
+
+// let renderNoteList = function (notes) {
+//   $noteList.empty()
+
+//   let noteListItems = []
+
+
 
   for (let i = 0; i < notes.length; i++) {
     let note = notes[i]
