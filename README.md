@@ -9,7 +9,7 @@
 
 I created an application called Note Taker that can be used to write and save notes. This application uses an Express.js back end and will save and retrieve note data from a JSON file. <br>
 
-Deployed Application:
+Deployed Application: https://got-notes-ohya.herokuapp.com/
 
 The following images shows the web application's appearance and functionality:<br><br>
 <img src="./assets/images/1.png" style="width: 50%; max-width: 50%;">
