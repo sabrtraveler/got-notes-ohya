@@ -1,38 +1,34 @@
-// Setting variables for the required modules
+// assigning variables for the modules
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const uuid = require("uuid");
 
-// Using express library
+//assigning variable for express 
 const app = express();
 
-// Setting up a port
+// assigning variable for the port set up
 const PORT = process.env.PORT || 3000;
 
-// Allows the server to talk to the client
+// this makes sure the server can communicate with the client
 app.use(express.static(__dirname + "/public"));
-// Fortmatting
+// it parses incoming requests with urlencoded payloads. The “extended” syntax allows for rich objects and arrays to be encoded into the URL-encoded format, allowing for a JSON-like experience with URL-encoded. 
 app.use(express.urlencoded({ extended: true }));
-// Use json format with express
+// it allows json with express
 app.use(express.json());
 
-// Get request for the notes path
-// Sends the notes.html file back to the client
-
+// for the notes path create a Get Request 
 app.get("/notes", function (req, res) {
+// sending the notes.html file to the client
   res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
-// API request for the notes
-// Read the db.json file
-// If the file is empty initialize it as an empty array
-// Check to see if the objects have ids
-// If they don't then give them ids
-// Send back the data to the client side
+// when there is an api request
 app.get("/api/notes", function (req, res) {
+// fs readfile on db.json
   fs.readFile("./db/db.json", "utf8", function (err, data) {
     if (err) throw err;
+// if the db.json file is empty initialize as empty array
     if (data === "") {
       data = "[]";
       fs.writeFile("./db/db.json", data, function (err) {
@@ -40,7 +36,9 @@ app.get("/api/notes", function (req, res) {
       });
     }
     const addIdtoNotes = JSON.parse(data).map(function (note) {
+// check if the objects have ids
       if (!note.hasOwnProperty("id")) {
+// if there are no ids then give them one
         note.id = uuid.v4();
       }
       return note;
@@ -48,29 +46,31 @@ app.get("/api/notes", function (req, res) {
     fs.writeFile("./db/db.json", JSON.stringify(addIdtoNotes), function (err) {
       if (err) throw err;
     });
-
+// send the data back to the client
     return res.json(addIdtoNotes);
   });
 });
 
-// Get request to index page
-// Send the html file back
+// Get request for index.html
 app.get("*", function (req, res) {
   res.redirect("/");
+// send index.html back
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
-// Post reques
-// Get the data from the client and give the object a unique id
-// Read the json file and add the new object, then rewrite the JSON file
+// post request on notes
 app.post("/api/notes", function (req, res) {
   let allNotes;
+  // retrieve the data from client 
   const newNote = req.body;
+  //assign an id to the object
   newNote.id = uuid.v4();
+  // read the db.json and add new object 
   fs.readFile("./db/db.json", "utf8", function (err, data) {
     if (err) throw err;
     allNotes = JSON.parse(data);
     allNotes.push(newNote);
+    // rewrite the JSON file
     fs.writeFile("./db/db.json", JSON.stringify(allNotes), function (err) {
       if (err) throw err;
     });
@@ -78,10 +78,9 @@ app.post("/api/notes", function (req, res) {
   res.json(newNote);
 });
 
-// Delete request
-// Remove the object that the user has chosen to delete from the json file and rewrite it
-// Return the data back to the user
+// delete request
 app.delete("/api/notes/:id", function (req, res) {
+// delete the object that user chose to delete from json and rewrite
   let query = { _id: req.params.id };
   fs.readFile("./db/db.json", "utf8", function (err, data) {
     if (err) throw err;
@@ -91,6 +90,7 @@ app.delete("/api/notes/:id", function (req, res) {
         return note;
       }
     });
+    // return data back to user
     fs.writeFile("./db/db.json", JSON.stringify(newNotes), function (err) {
       if (err) throw err;
       return res.json(newNotes);
@@ -98,5 +98,5 @@ app.delete("/api/notes/:id", function (req, res) {
   });
 });
 
-// Enure that the server is listening to PORT 3000
-app.listen(PORT, () => console.log(`App is listening on PORT ${PORT}`));
+// make sure server is litening on port 3000
+app.listen(PORT, () => console.log(`the app is listening on ${PORT}`));
