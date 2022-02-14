@@ -9,6 +9,8 @@
 
 I created an application called Note Taker that can be used to write and save notes. This application uses an Express.js back end and will save and retrieve note data from a JSON file. <br>
 
+Deployed Application: https://sabrtraveler.github.io/got-notes-ohya/
+
 The following images shows the web application's appearance and functionality:<br><br>
 <img src="./assets/images/1.png" style="width: 50%; max-width: 50%;">
 <img src="./assets/images/2.png" style="width: 50%; max-width: 50%;">
